@@ -1,135 +1,129 @@
 # react-gauge-chart
-React component for displaying a gauge chart, using D3.js
 
-# Usage
-Install it by running `npm install react-gauge-chart`. Then to use it:
+React component for displaying a gauge chart, built with D3.js. This is a
+modernized TypeScript fork of [Martin36/react-gauge-chart][upstream] with
+`prop-types` removed, a strict `tsup` build (ESM + CJS + `.d.ts`), React 18/19
+peer-dep range, and the long-standing remount-on-rerender bug fixed.
 
-```jsx
-import GaugeChart from 'react-gauge-chart'
+[upstream]: https://github.com/Martin36/react-gauge-chart
+
+## Install
+
+```sh
+npm install react-gauge-chart
+```
+
+Peer dependencies: `react` and `react-dom` >= 18, < 20.
+
+## Usage
+
+```tsx
+import GaugeChart from 'react-gauge-chart';
 
 <GaugeChart id="gauge-chart1" />
 ```
 
-## Examples
+### Examples
 
-Check the demo below for live examples of the charts
+```tsx
+// 20 levels, pointer at 86%
+<GaugeChart id="gauge-chart2" nrOfLevels={20} percent={0.86} />
 
-#### To create a default chart
-
-```jsx
-<GaugeChart id="gauge-chart1" />
-```
-
-#### Chart with 20 levels and pointer at 86%
-
-```jsx
-<GaugeChart id="gauge-chart2" 
-  nrOfLevels={20} 
-  percent={0.86} 
+// Custom colors and larger arc width
+<GaugeChart
+  id="gauge-chart3"
+  nrOfLevels={30}
+  colors={['#FF5F6D', '#FFC371']}
+  arcWidth={0.3}
+  percent={0.37}
 />
-```
 
-#### Chart with custom colors and larger arc width
-
-```jsx
-<GaugeChart id="gauge-chart3" 
-  nrOfLevels={30} 
-  colors={["#FF5F6D", "#FFC371"]} 
-  arcWidth={0.3} 
-  percent={0.37} 
-/>
-```
-
-#### Chart with other corner radius and larger padding between arcs
-
-```jsx
-<GaugeChart id="gauge-chart4" 
-  nrOfLevels={10} 
-  arcPadding={0.1} 
-  cornerRadius={3} 
-  percent={0.6} 
-/>
-```
-
-#### Chart with custom arcs width
-
-```jsx
-<GaugeChart id="gauge-chart5"
-  nrOfLevels={420}
+// Custom arcs width (arcsLength overrides nrOfLevels)
+<GaugeChart
+  id="gauge-chart5"
   arcsLength={[0.3, 0.5, 0.2]}
   colors={['#5BE12C', '#F5CD19', '#EA4228']}
   percent={0.37}
   arcPadding={0.02}
 />
-```
 
-#### Chart with disabled animation
+// Disabled animation
+<GaugeChart
+  id="gauge-chart6"
+  animate={false}
+  nrOfLevels={15}
+  percent={0.56}
+  needleColor="#345243"
+/>
 
-```jsx
-<GaugeChart id="gauge-chart6" 
-  animate={false} 
-  nrOfLevels={15} 
-  percent={0.56} 
-  needleColor="#345243" 
+// Formatted text value
+<GaugeChart
+  id="gauge-chart8"
+  percent={0.37}
+  formatTextValue={(v) => `${v}kbit/s`}
 />
 ```
 
-# Demo
-https://martin36.github.io/react-gauge-chart/
+## Props
 
-# API
+The component exports a `GaugeChartProps` interface:
 
-## <GaugeChart />
-
-### Warning: Do not use the same `id` for multiple charts, as it will put multiple charts in the same container
-
-#### Note: If you do any updates to the props of the chart, it will rerender with a different size (it's a bug). To prevent this set a fixed height for the chart e.g.
-
-```jsx
-const chartStyle = {
-  height: 250,
-}
-
-<GaugeChart id="gauge-chart1" style={chartStyle} />
-
+```ts
+import type { GaugeChartProps } from 'react-gauge-chart';
 ```
 
-The props for the chart:
+| Prop                              | Type                              | Default                | Description                                                           |
+| --------------------------------- | --------------------------------- | ---------------------- | --------------------------------------------------------------------- |
+| `id`                              | `string`                          | —                      | `id` applied to the outer `<div>`.                                    |
+| `className`                       | `string`                          | —                      | `className` applied to the outer `<div>`.                             |
+| `style`                           | `CSSProperties`                   | `{ width: '100%' }`    | Style applied to the outer `<div>`.                                   |
+| `marginInPercent`                 | `number`                          | `0.05`                 | Chart margin inside the SVG.                                          |
+| `cornerRadius`                    | `number`                          | `6`                    | Corner radius of the arc segments.                                    |
+| `nrOfLevels`                      | `number`                          | `3`                    | Number of arc segments. Ignored when `arcsLength` is set.             |
+| `percent`                         | `number`                          | `0.4`                  | Needle target value between 0 and 1.                                  |
+| `arcPadding`                      | `number`                          | `0.05`                 | Gap between arc segments (radians).                                   |
+| `arcWidth`                        | `number`                          | `0.2`                  | Arc thickness as a fraction of radius.                                |
+| `arcsLength`                      | `number[]`                        | —                      | Explicit per-arc lengths. Overrides `nrOfLevels`.                     |
+| `colors`                          | `string[]`                        | `['#00FF00','#FF0000']`| Arc colors. Interpolated if count ≠ `nrOfLevels`.                     |
+| `textColor`                       | `string`                          | `'#FFFFFF'`            | Default text color.                                                   |
+| `fontSize`                        | `string \| null`                  | `null` (auto)          | Explicit text size.                                                   |
+| `needleColor`                     | `string`                          | `'#464A4F'`            | Needle triangle color.                                                |
+| `needleBaseColor`                 | `string`                          | `'#464A4F'`            | Needle base circle color.                                             |
+| `hideText`                        | `boolean`                         | `false`                | Hide the default percentage text.                                     |
+| `animate`                         | `boolean`                         | `true`                 | Animate the needle on mount/update.                                   |
+| `animDelay`                       | `number`                          | `500`                  | Animation delay in ms.                                                |
+| `animateDuration`                 | `number`                          | `3000`                 | Animation duration in ms.                                             |
+| `formatTextValue`                 | `(v: number) => string \| null`   | `null`                 | Format the default text value.                                        |
+| `textComponent`                   | `ReactElement \| null`            | `null`                 | Replace the default text with a custom element.                       |
+| `textComponentContainerClassName` | `string`                          | —                      | `className` for the text container.                                   |
+| `needleScale`                     | `number`                          | `0.55`                 | Needle length as a fraction of the arc radius.                        |
+| `customNeedleComponent`           | `ReactElement \| null`            | `null`                 | Replace the SVG needle with a custom element (rotate it yourself).    |
+| `customNeedleComponentClassName`  | `string`                          | —                      | `className` for the custom-needle container.                          |
+| `customNeedleStyle`               | `CSSProperties`                   | —                      | Style for the custom-needle container.                                |
 
-| Name            | PropType                    | Description                                                    | Default value          |
-|-----------------|-----------------------------|----------------------------------------------------------------|------------------------|
-| id              | PropTypes.string.isRequired | Used for the identification of the div surrounding the chart   |                        |
-| className       | PropTypes.string            | Add `className` to the div container                           |                        |
-| style           | PropTypes.object            | Add `style` to the div container                               | { width: '100%' }      |
-| marginInPercent | PropTypes.number            | Margin for the chart inside the containing SVG element         | 0.05                   |
-| cornerRadius    | PropTypes.number            | Corner radius for the elements in the chart                    | 6                      |
-| nrOfLevels      | PropTypes.number            | The number of elements displayed in the arc                    | 3                      |
-| percent         | PropTypes.number            | The number where the pointer should point to (between 0 and 1) | 0.4                    |
-| arcPadding      | PropTypes.number            | The distance between the elements in the arc                   | 0.05                   |
-| arcWidth        | PropTypes.number            | The thickness of the arc                                       | 0.2                    |
-| colors          | PropTypes.array             | An array of colors in HEX format displayed in the arc          | ["#00FF00", "#FF0000"] |
-| textColor       | PropTypes.string            | The color of the text                                          | "#FFFFFF"              |
-| fontSize        | PropTypes.string            | The font size of the text                                      | none              |
-| needleColor     | PropTypes.string            | The color of the needle triangle                               | "#464A4F"              |
-| needleBaseColor | PropTypes.string            | The color of the circle at the base of the needle              | "#464A4F"              |
-| hideText        | PropTypes.bool              | Whether or not to hide the percentage display                  | false                  |
-| arcsLength      | PropTypes.array             | An array specifying the length of each individual arc. If this prop is set, the nrOfLevels prop will have no effect      | none                   |
-| animate         | PropTypes.bool              | Whether or not to animate the needle when loaded               | true                   |
-| animDelay       | PropTypes.number            | Delay in ms before starting the needle animation               | 500                    |
-| animateDuration       | PropTypes.number            | Duration in ms for the needle animation               | 3000                    |
-| formatTextValue | PropTypes.func              | Format you own text value (example: value => value+'%')        | null                   |
-| textComponent   | PropTypes.elements          | Custom text label textComponent                                | null                   |
-| textComponentContainerClassName | PropTypes.string | Add `className` to the text component container           |                        |
-| needleScale     | PropTypes.number            | Needle arc cornerRadius                                        | 0.55                   |
-| customNeedleComponent | PropTypes.element     | Custom needle component `Note: Make sure to rotate the needle as per the percentage value` | null |
-| customNeedleComponentClassName | PropTypes.string | Add `className` to the custom needle container             |                        |
-| customNeedleStyle | PropsTypes.object         | Add `style` to custom needle container div                     |                        |
-|
+### Notes on colors
 
-##### Colors for the chart
+Colors can be passed two ways:
 
-The colors could either be specified as an array of hex color values, such as `["#FF0000", "#00FF00", "#0000FF"]` where
-each arc would a color in the array (colors are assigned from left to right). If that is the case, then the **length of the array**
-must match the **number of levels** in the arc.
-If the number of colors does not match the number of levels, then the **first** and the **last** color from the colors array will
-be selected and the arcs will get colors that are interpolated between those. The interpolation is done using [d3.interpolateHsl](https://github.com/d3/d3-interpolate#interpolateHsl).
+- **Exact count** — `colors.length === nrOfLevels` (or `arcsLength.length`): each arc gets the corresponding color.
+- **Endpoint count** — any other length: the first and last entries are taken as endpoints and remaining arcs are filled via [`d3.interpolateHsl`](https://github.com/d3/d3-interpolate#interpolateHsl).
+
+### Warning
+
+Do not reuse the same `id` for multiple charts on a page — d3 selectors will collide.
+
+## Development
+
+```sh
+npm install
+npm run typecheck
+npm run lint
+npm run test
+npm run build
+```
+
+The library build emits to `dist/`:
+
+- `dist/index.js` — ESM
+- `dist/index.cjs` — CJS
+- `dist/index.d.ts` — types
