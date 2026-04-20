@@ -1,68 +1,68 @@
 {
   "name": "react-gauge-chart",
-  "version": "0.5.1",
-  "main": "dist/index",
-  "module": "dist/index",
-  "typings": "dist/index",
-  "homepage": "https://martin36.github.io/react-gauge-chart/",
+  "version": "0.6.0",
+  "description": "React component for displaying a gauge chart, using D3.js",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/currenttech/react-gauge-chart"
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "typecheck": "tsc --noEmit",
+    "lint": "biome check --error-on-warnings",
+    "format": "biome check --write",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "prepublishOnly": "npm run typecheck && npm run lint && npm run test && npm run build"
+  },
+  "dependencies": {
+    "d3": "^7.9.0"
+  },
+  "peerDependencies": {
+    "react": ">=18 <20",
+    "react-dom": ">=18 <20"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.4.2",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.1.0",
+    "@types/d3": "^7.4.3",
+    "@types/react": "^19.0.1",
+    "@types/react-dom": "^19.0.1",
+    "jsdom": "^25.0.1",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "tsup": "^8.3.5",
+    "typescript": "^5.6.3",
+    "vitest": "^4.1.4"
+  },
   "keywords": [
     "visualization",
     "react",
     "gauge chart",
-    "speedometer"
+    "speedometer",
+    "typescript"
   ],
-  "license": "MIT",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "sideEffects": false,
   "files": [
     "dist",
-    "README.md"
+    "README.md",
+    "LICENSE"
   ],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/Martin36/react-gauge-chart"
-  },
-  "dependencies": {
-    "d3": "^7.6.1"
-  },
-  "scripts": {
-    "start": "react-scripts start",
-    "prebuild": "rimraf dist",
-    "build": "NODE_ENV=production babel src/lib --out-dir dist --copy-files",
-    "build-page": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "predeploy": "npm run build-page",
-    "deploy": "gh-pages -d build"
-  },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
-  "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not ie <= 11",
-    "not op_mini all"
-  ],
-  "devDependencies": {
-    "@babel/cli": "^7.12.8",
-    "@babel/core": "^7.6.2",
-    "@babel/plugin-proposal-class-properties": "^7.4.4",
-    "@babel/preset-env": "^7.4.4",
-    "@babel/preset-react": "^7.0.0",
-    "@babel/runtime": "^7.6.2",
-    "babel-preset-react-app": "^8.0.0",
-    "cross-env": "^5.2.1",
-    "gh-pages": "^2.1.1",
-    "react": "^17.0.1",
-    "react-bootstrap": "^1.4.0",
-    "react-dom": "^17.0.1",
-    "react-scripts": "5.0.1",
-    "rimraf": "^2.7.1"
-  },
-  "peerDependencies": {
-    "react": "^16.8.2 || ^17.0 || ^18.x || ^19.x",
-    "react-dom": "^16.8.2 || ^17.0 || ^18.x || ^19.x"
-  },
-  "publishConfig": {
-    "registry": "https://registry.npmjs.org/"
+  "engines": {
+    "node": ">=20"
   }
 }
